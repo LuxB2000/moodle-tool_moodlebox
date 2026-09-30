@@ -40,6 +40,7 @@ $string['testcollectingstatistics'] = 'Tester la collecte de statistiques';
 $string['testcollectingstatistics_desc'] = 'Tester la collecte de statistiques';
 $string['moodle_version_numberdescription'] = 'La version actuelle de Moodle';
 $string['moodlebox_version_numberdescription'] = 'La version actuelle de l\'image MoodleBox';
+$string['moodlebox_tool_version_numberdescription'] = 'La version actuelle de l\'outil MoodleBox_tool (i.e. cette librairie)';
 $string['currentstatisticsheader'] = 'Information sur les statistiques actuellement collectées';
 $string['previousstatisticsheader'] = 'Information sur les statistiques précédemment collectées';
 $string['prevstatisticsintro'] = 'Voici les dernières statistiques collectées :';
