@@ -23,34 +23,18 @@
  */
 
 namespace tool_moodlebox\local;
-require_once(__DIR__ . '/moodlebox_statistic.php');
 
-class generic_string_statistic extends moodlebox_statistic {
-    private string $value = '';
-    public function __construct($value, $name) {
+class generic_statistic extends \tool_moodlebox\local\moodlebox_statistic {
+    private mixed $value = null;
+    public function __construct($value, $name, $type) {
         $this->set_statistic_name($name);
-        $this->set_statistic_type('string');
+        $this->set_statistic_type($type);
         $this->set_description('A generic statistic used when loaded from JSON file');
         $this->value = $value;
     }
     
     #[\Override]
-    public function collecting_function(): string {
-        return $this->value;
-    }
-}
-
-class generic_number_statistic extends moodlebox_statistic {
-    private float $value = 0;
-    public function __construct($value, $name) {
-        $this->set_statistic_name($name);
-        $this->set_statistic_type('number');
-        $this->set_description('A generic statistic used when loaded from JSON file');
-        $this->value = $value;
-    }
-    
-    #[\Override]
-    public function collecting_function(): float {
+    public function collecting_function(): mixed {
         return $this->value;
     }
 }
@@ -75,28 +59,36 @@ class moodlebox_statistics_container {
      *
      * @param ?string $jsonstring Optional JSON string to pre-populate fields from a previously
      *     serialised container. When null a fresh, empty container is created.
+     *  If set, this input will be used to reconstruct the container with generic statistics objects
      */
     public function __construct(?string $jsonstring = null) {
         $this->creationdate = time();
-        error_log("Test input: " . $jsonstring);
         if ($jsonstring !== null) {
-            if (json_validate($jsonstring)) {
-                $raw = json_decode($jsonstring, true);
-                error_log("Raw data: " . print_r($raw, true));
-                foreach ($raw as $key => $statvalue) {
-                    $type = $statvalue['type'];
-                    $value = $statvalue['value'];
-                    $name = $statvalue['name'];
-                    if ($type === 'string') {
-                        $this->fields[$key] = new generic_string_statistic($value, $name);
-                    } elseif ($type === 'number') {
-                        $this->fields[$key] = new generic_number_statistic($value, $name);
-                    }
-                }
-            } else {
-                error_log("Invalid JSON string: " . $jsonstring);
+
+            if (!json_validate($jsonstring)) {
+                error_log("[moodblebox_statistics_container::__construct] Invalid JSON string: " . $jsonstring);
+                return;
             }
-            // TODO if creationdate is present, use it
+            
+            $raw = json_decode($jsonstring, true);
+            foreach ($raw as $key => $statvalue) {
+                $type = $statvalue['type'];
+                if ($type !== 'string' && $type !== 'number') {
+                    error_log("[moodblebox_statistics_container::__construct] Invalid type: " . $type . " for key: " . $key);
+                    continue;
+                }
+                $value = $statvalue['value'];
+                if (!is_numeric($value) && !is_string($value)) {
+                    error_log("[moodblebox_statistics_container::__construct] Invalid value: " . $value . " for key: " . $key);
+                    continue;
+                }
+                $name = $statvalue['name'];
+                if (!is_string($name) || $name === '') {
+                    error_log("[moodblebox_statistics_container::__construct] Invalid name: " . $name . " for key: " . $key);
+                    continue;
+                }
+                $this->fields[$key] = new generic_statistic($value, $name, $type);
+            }
         }
     }
 
