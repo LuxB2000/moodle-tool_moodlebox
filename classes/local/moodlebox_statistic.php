@@ -57,7 +57,7 @@ abstract class moodlebox_statistic {
     /**
      * Set the data type of this statistic.
      *
-     * Must be one of: string, number, boolean, array, object.
+     * Must be one of: string, number
      *
      * @param string $type The data type of the statistic value.
      */
