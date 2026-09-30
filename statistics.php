@@ -46,10 +46,14 @@ $statisticsform = new statistics_form();
 echo $OUTPUT->header();
 echo $OUTPUT->heading($strheading);
 
+echo $OUTPUT->box_start('generalbox', 'intro');
+echo $OUTPUT->box(get_string('statisticsinformation', 'tool_moodlebox'));
+echo $OUTPUT->box_end();
+
 if ($data = $statisticsform->get_data()) {
     $reset = $data->reset;
     // TODO: run the actual statistics collection and sending logic here.
-    echo '<p>' . 'This works !!' . '</p>';
+    echo '<p>' . get_string('statisticstestok', 'tool_moodlebox') . '</p>';
     // 1. If the file is not created, then create it.
     if (!statistics_lib::is_local_file_present()) {
         statistics_lib::create_local_file();
@@ -64,7 +68,7 @@ if ($data = $statisticsform->get_data()) {
     // 3. Append the statistics to the local file.
     statistics_lib::add_statistics_to_local_file($statistics);
 
-    echo '<p>' . 'Statistics added to local file' . '</p>';
+    echo '<p>' . get_string('statisticsaddedtolocalfile', 'tool_moodlebox') . '</p>';
 
     // Reset the form.
     $statisticsform = new statistics_form(); // TO FIX: checkbox is still checked
@@ -73,11 +77,11 @@ if ($data = $statisticsform->get_data()) {
 $collectedstatistics = statistics_lib::collect_statistics();
 // Display the presence of the local file.
 if (statistics_lib::is_local_file_present()) {
-    echo '<p>' . 'Local file present' . '</p>';
-    echo '<p>' . 'Statistics collected yet not sent: ' . count($collectedstatistics) . '</p>';
-    echo '<p>' . 'Last statistics collected: ' . end($collectedstatistics)->get_date() . '</p>';
+    echo '<p>' . get_string('statisticslocalfilepresent', 'tool_moodlebox') . '</p>';
+    echo '<p>' . get_string('statisticscollectednotsent', 'tool_moodlebox', count($collectedstatistics)) . '</p>';
+    echo '<p>' . get_string('statisticslastcollected', 'tool_moodlebox', end($collectedstatistics)->get_date()) . '</p>';
 } else {
-    echo '<p>' . 'Local file not present: no statistics collected yet' . '</p>';
+    echo '<p>' . get_string('statisticslocalfilenotpresent', 'tool_moodlebox') . '</p>';
 }
 
 echo $statisticsform->render();

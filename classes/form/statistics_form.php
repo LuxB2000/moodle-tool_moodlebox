@@ -45,6 +45,7 @@ class statistics_form extends moodleform {
     public function definition() {
         $mform = $this->_form;
         $mform->addElement('advcheckbox', 'reset', get_string('reset', 'tool_moodlebox'));
+        $mform->addHelpButton('reset', 'reset', 'tool_moodlebox');
 
         $this->add_action_buttons(
             false,

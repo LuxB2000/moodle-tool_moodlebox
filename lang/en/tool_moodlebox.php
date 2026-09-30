@@ -159,7 +159,17 @@ $string['wifissidinvalid'] = 'The name of the Wi-Fi network (SSID) provided is i
 $string['showbuttonsinfooter'] = 'Show restart and shutdown buttons in footer';
 $string['showbuttonsinfooter_desc'] = 'If enabled, the restart and shutdown buttons are displayed in the footer of all pages of the site when logged in as an administrator or as a manager.';
 
+// Statistics page strings
+$string['reset'] = 'Reset';
+$string['reset_help'] = 'When checked, the local statistics file will be emptied before collecting new statistics. Use this option to discard previously accumulated data and start fresh.';
+$string['statisticsaddedtolocalfile'] = 'Statistics added to local file.';
 $string['statisticscollectedandsent'] = 'Statistics collected and sent';
-$string['statisticssettingsheading'] = 'Statistics';
+$string['statisticscollectednotsent'] = 'Statistics collected yet not sent: {$a}';
+$string['statisticslastcollected'] = 'Last statistics collected: {$a}';
+$string['statisticslocalfilenotpresent'] = 'Local file not present: no statistics collected yet';
+$string['statisticslocalfilepresent'] = 'Local file present';
+$string['statisticssettingsheading'] = 'MoodbleBox Statistics';
+$string['statisticsinformation'] = 'Statistics are anonymous data collected on your Moodle Box. They are sent to MoodleBox to help improve the product. The precise data collected is described below. You can always disable this option in the main configuration menu of MoodbleBox.';
+$string['statisticstestok'] = 'Test successful!';
 $string['testcollectingstatistics'] = 'Test collecting statistics';
 $string['testcollectingstatistics_desc'] = 'Test collecting statistics';
