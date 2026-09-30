@@ -87,10 +87,17 @@ echo '<h3>' . get_string('previousstatisticsheader', 'tool_moodlebox') . '</h3>'
 if (statistics_lib::is_local_file_present()) {
     echo '<p>' . get_string('statisticslocalfilepresent', 'tool_moodlebox') . '</p>';
     echo '<p>' . get_string('statisticscollectednotsent', 'tool_moodlebox', count($collectedstatistics)) . '</p>';
-    echo '<p>' . get_string('statisticslastcollected', 'tool_moodlebox', end($collectedstatistics)->get_date()) . '</p>';
-    foreach (end($collectedstatistics)->get_fields_iterable() as $statistic) {
-        echo '<p>' . $statistic->get_name() . ' - value: ' . $statistic->get_value() . '</p>';
+    if (count($collectedstatistics) > 0) {
+        echo '<p>' . get_string('statisticslastcollected', 'tool_moodlebox', end($collectedstatistics)->get_date()) . '</p>';
+        echo '<p>' . get_string('prevstatisticsintro', 'tool_moodlebox') . '</p>';
+        echo '<pre>';
+        foreach (end($collectedstatistics)->get_fields_iterable() as $statistic) {
+            echo '<p> . <strong>' . $statistic->get_name() . '</strong> - value: ' . $statistic->get_value() . '</p>';
+        }
+    } else {
+        echo '<p>' . get_string('statisticslastcollected', 'tool_moodlebox', 'never') . '</p>';
     }
+    echo '</pre>';
 } else {
     echo '<p>' . get_string('statisticslocalfilenotpresent', 'tool_moodlebox') . '</p>';
 }
