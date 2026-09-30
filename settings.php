@@ -101,7 +101,7 @@ if ($hassiteconfig) { // Speedup for non-admins.
         ));
 
         // Link to the statistics test page.
-        $statisticsurl = new moodle_url('/admin/tool/moodlebox/statistics-page.php');
+        $statisticsurl = new moodle_url('/admin/tool/moodlebox/statistics.php');
         $moodleboxsettingpage->add(new admin_setting_description(
             'tool_moodlebox/statisticslink',
             '',

@@ -15,30 +15,39 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Test script for collecting statistics.
- * 
+ * Statistics collection form for the MoodleBox plugin.
+ *
  * @package    tool_moodlebox
- * @copyright  2026 Jerome Plumat, original work by Nicolas Martignoni
+ * @copyright  2026 Jerome Plumat
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
 namespace tool_moodlebox\form;
+
 use moodleform;
 
-defined('MOODLE_INTERNAL') || die;
+defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/formslib.php');
 
+/**
+ * Form used to trigger statistics collection and optionally reset the local statistics file.
+ *
+ * @package    tool_moodlebox
+ * @copyright  2026 Jerome Plumat
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class statistics_form extends moodleform {
-    public function definition() {
 
-        // add a checkbox to reset the local file
+    /**
+     * Define the form elements.
+     */
+    public function definition() {
         $mform = $this->_form;
         $mform->addElement('advcheckbox', 'reset', get_string('reset', 'tool_moodlebox'));
 
         $this->add_action_buttons(
-            false, 
+            false,
             get_string('testcollectingstatistics', 'tool_moodlebox')
         );
     }
