@@ -50,38 +50,34 @@ echo $OUTPUT->box_start('generalbox', 'form');
 echo '<h3>' . get_string('currentstatisticsheader', 'tool_moodlebox') . '</h3>';
 echo $OUTPUT->box(get_string('statisticsinformation', 'tool_moodlebox'));
 $currentstatistics = new moodlebox_statistics_container();
-$currentstatistics->collect();
+$currentstatistics->collect(); // collect data to dynamically parse the folder with statistic objects defined
 foreach ($currentstatistics->get_fields_iterable() as $key => $statistic) {
     echo '<p>' . $statistic->get_name() . ': ' . $statistic->get_description() . ' - current value: ' . $statistic->get_value() . '</p>';
 }
 echo $OUTPUT->box_end();
 
 if ($data = $statisticsform->get_data()) {
-    $reset = $data->reset;
-    // TODO: run the actual statistics collection and sending logic here.
-    // echo '<p>' . get_string('statisticstestok', 'tool_moodlebox') . '</p>';
     // 1. If the file is not created, then create it.
     if (!statistics_lib::is_local_file_present()) {
         statistics_lib::create_local_file();
     }
+    $reset = $data->reset;
     // 1.1 If reset is true, empty the file.
     if ($reset) {
         statistics_lib::empty_local_file();
     }
-    // 2. Create a statistics container and collect data.
+    // 2. Create a statistics container and collect new data.
     $statisticsContainer = new moodlebox_statistics_container();
     $statisticsContainer->collect();
     // 3. Append the statistics to the local file.
     statistics_lib::add_statistics_to_local_file($statisticsContainer);
-
-    // echo '<p>' . get_string('statisticsaddedtolocalfile', 'tool_moodlebox') . '</p>';
 
     // Reset the form.
     $statisticsform = new statistics_form(); // TO FIX: checkbox is still checked
 }
 
 $collectedstatistics = statistics_lib::collect_statistics_from_file();
-// Display the presence of the local file.
+// Present the last collected statistics if any
 echo $OUTPUT->box_start('generalbox', 'intro');
 echo '<h3>' . get_string('previousstatisticsheader', 'tool_moodlebox') . '</h3>';
 if (statistics_lib::is_local_file_present()) {
