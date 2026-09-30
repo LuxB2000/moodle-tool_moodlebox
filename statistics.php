@@ -23,6 +23,7 @@
  */
 
 require_once __DIR__ . '/require_moodle.php';
+// require_once(dirname(dirname(dirname(dirname(__FILE__)))) . '/config.php');
 require_once($CFG->libdir . '/adminlib.php');
 require_once(__DIR__ . '/classes/form/statistics_form.php');
 require_once(__DIR__ . '/classes/local/statistics_lib.php');

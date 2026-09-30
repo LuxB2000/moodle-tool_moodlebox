@@ -33,6 +33,11 @@
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+/**
+ * TODO : remove
+ * This is dev stuff, to be removed before release
+ */
+
 // Standard install: plugin lives directly inside Moodle at admin/tool/moodlebox/.
 $moodleroot = dirname(dirname(dirname(dirname(__FILE__))));
 
