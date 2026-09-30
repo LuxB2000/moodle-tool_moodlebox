@@ -49,40 +49,40 @@ echo $OUTPUT->heading($strheading);
 
 
 if ($data = $statisticsform->get_data()) {
-    // collect results from form
-    $reset = $data->reset;
-    // TODO: run the actual statistics collection and sending logic here.
-    echo "<p>" . "This works !!" . "</p>";
-    // run the main statistics process
-    // 1. if the file is not created, then create the file
-    if (!\tool_moodlebox\local\statistics_lib::is_local_file_present()) {
-        \tool_moodlebox\local\statistics_lib::create_local_file();
-    }
-    // 1.1 if reset is true, then empty the file
-    if ($reset) {
-        \tool_moodlebox\local\statistics_lib::empty_local_file();
-    }
-    // 2. create a statistics container
-    $statistics = new \tool_moodlebox\local\moodlebox_statistics_container();
-    $statistics->collect();
-    // 3. happen the statistics to the local file
-    \tool_moodlebox\local\statistics_lib::add_statistics_to_local_file($statistics);
-    
-    echo "<p>" . "Statistics added to local file" . "</p>";
+  // Collect results from form
+  $reset = $data->reset;
+  // TODO: run the actual statistics collection and sending logic here.
+  echo "<p>" . "This works !!" . "</p>";
+  // Run the main statistics process
+  // 1. if the file is not created, then create the file
+  if (!\tool_moodlebox\local\statistics_lib::is_local_file_present()) {
+    \tool_moodlebox\local\statistics_lib::create_local_file();
+  }
+  // 1.1 if reset is true, then empty the file
+  if ($reset) {
+    \tool_moodlebox\local\statistics_lib::empty_local_file();
+  }
+  // 2. create a statistics container
+  $statistics = new \tool_moodlebox\local\moodlebox_statistics_container();
+  $statistics->collect();
+  // 3. happen the statistics to the local file
+  \tool_moodlebox\local\statistics_lib::add_statistics_to_local_file($statistics);
+  
+  echo "<p>" . "Statistics added to local file" . "</p>";
 
 
-    // reset the form
-    $statisticsform = new \tool_moodlebox\form\statistics_form(); // TO FIX: checkbox is still checked
+  // reset the form
+  $statisticsform = new \tool_moodlebox\form\statistics_form(); // TO FIX: checkbox is still checked
 }
 
 $collectedstatistics = \tool_moodlebox\local\statistics_lib::collect_statistics();
 // Display the presence of the local file.
 if (\tool_moodlebox\local\statistics_lib::is_local_file_present()) {
-    echo "<p>" . "Local file present" . "</p>";
-    echo "<p>" . "Statistics collected yet not sent: " . count($collectedstatistics) . "</p>";
-    echo "<p>" . "Last statistics collected: " . end($collectedstatistics)->get_date() . "</p>";
+  echo "<p>" . "Local file present" . "</p>";
+  echo "<p>" . "Statistics collected yet not sent: " . count($collectedstatistics) . "</p>";
+  echo "<p>" . "Last statistics collected: " . end($collectedstatistics)->get_date() . "</p>";
 } else {
-    echo "<p>" . "Local file not present: no statistics collected yet" . "</p>";
+  echo "<p>" . "Local file not present: no statistics collected yet" . "</p>";
 }
 
 echo $statisticsform->render();
