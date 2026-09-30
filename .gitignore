@@ -9,6 +9,9 @@ statistics-metadata.json
 # doc file
 *.md
 
+# local tools
+/bin/utils/*
+
 # Node and Grunt files
 node_modules
 
