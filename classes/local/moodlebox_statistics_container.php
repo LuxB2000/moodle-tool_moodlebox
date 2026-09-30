@@ -23,6 +23,37 @@
  */
 
 namespace tool_moodlebox\local;
+require_once(__DIR__ . '/moodlebox_statistic.php');
+
+class generic_string_statistic extends moodlebox_statistic {
+    private string $value = '';
+    public function __construct($value, $name) {
+        $this->set_statistic_name($name);
+        $this->set_statistic_type('string');
+        $this->set_description('A generic statistic used when loaded from JSON file');
+        $this->value = $value;
+    }
+    
+    #[\Override]
+    public function collecting_function(): string {
+        return $this->value;
+    }
+}
+
+class generic_number_statistic extends moodlebox_statistic {
+    private float $value = 0;
+    public function __construct($value, $name) {
+        $this->set_statistic_name($name);
+        $this->set_statistic_type('number');
+        $this->set_description('A generic statistic used when loaded from JSON file');
+        $this->value = $value;
+    }
+    
+    #[\Override]
+    public function collecting_function(): float {
+        return $this->value;
+    }
+}
 
 /**
  * Holds and serialises a collection of MoodleBox statistics gathered at a single point in time.
@@ -47,8 +78,24 @@ class moodlebox_statistics_container {
      */
     public function __construct(?string $jsonstring = null) {
         $this->creationdate = time();
+        error_log("Test input: " . $jsonstring);
         if ($jsonstring !== null) {
-            $this->fields = json_decode($jsonstring, true);
+            if (json_validate($jsonstring)) {
+                $raw = json_decode($jsonstring, true);
+                error_log("Raw data: " . print_r($raw, true));
+                foreach ($raw as $key => $statvalue) {
+                    $type = $statvalue['type'];
+                    $value = $statvalue['value'];
+                    $name = $statvalue['name'];
+                    if ($type === 'string') {
+                        $this->fields[$key] = new generic_string_statistic($value, $name);
+                    } elseif ($type === 'number') {
+                        $this->fields[$key] = new generic_number_statistic($value, $name);
+                    }
+                }
+            } else {
+                error_log("Invalid JSON string: " . $jsonstring);
+            }
             // TODO if creationdate is present, use it
         }
     }
@@ -65,9 +112,9 @@ class moodlebox_statistics_container {
      */
     // THIS SHOULD NOT BE USED see collect() method, we should refere to local statistics classes,
     // the input must refer to the class name define in the php /local/statistics/ folder
-    public function add_field(string $key, mixed $value): void {
-        $this->fields[$key] = $value;
-    }
+    // public function add_field(string $key, mixed $value): void {
+    //     $this->fields[$key] = $value;
+    // }
 
     /**
      * Discover and run all statistic collectors found in the statistics/ sub-directory.
@@ -120,7 +167,12 @@ class moodlebox_statistics_container {
      * @return string JSON representation of the container, including the creation date and all fields.
      */
     public function to_json(): string {
-        $content = ['creationdate' => $this->get_date()];
+        $creationDateRecord = [
+            'name' => 'creationdate',
+            'type' => 'string',
+            'value' => $this->get_date(),
+        ];
+        $content = ['creationdate' => $creationDateRecord];
         foreach ($this->fields as $field) {
             $content[$field->get_name()] = $field->to_array();
         }
