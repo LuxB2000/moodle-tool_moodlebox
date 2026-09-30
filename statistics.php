@@ -46,24 +46,20 @@ $statisticsform = new statistics_form();
 echo $OUTPUT->header();
 echo $OUTPUT->heading($strheading);
 
-echo $OUTPUT->box_start('generalbox', 'intro');
-echo $OUTPUT->box(get_string('statisticsinformation', 'tool_moodlebox'));
-echo $OUTPUT->box_end();
-
-
 echo $OUTPUT->box_start('generalbox', 'form');
-echo 'Current statistics:';
+echo '<h3>' . get_string('currentstatisticsheader', 'tool_moodlebox') . '</h3>';
+echo $OUTPUT->box(get_string('statisticsinformation', 'tool_moodlebox'));
 $currentstatistics = new moodlebox_statistics_container();
 $currentstatistics->collect();
 foreach ($currentstatistics->get_fields_iterable() as $key => $statistic) {
-    echo $OUTPUT->box($statistic->get_name() . ': ' . $statistic->get_description());
+    echo '<p>' . $statistic->get_name() . ': ' . $statistic->get_description() . ' - current value: ' . $statistic->get_value() . '</p>';
 }
 echo $OUTPUT->box_end();
 
 if ($data = $statisticsform->get_data()) {
     $reset = $data->reset;
     // TODO: run the actual statistics collection and sending logic here.
-    echo '<p>' . get_string('statisticstestok', 'tool_moodlebox') . '</p>';
+    // echo '<p>' . get_string('statisticstestok', 'tool_moodlebox') . '</p>';
     // 1. If the file is not created, then create it.
     if (!statistics_lib::is_local_file_present()) {
         statistics_lib::create_local_file();
@@ -78,7 +74,7 @@ if ($data = $statisticsform->get_data()) {
     // 3. Append the statistics to the local file.
     statistics_lib::add_statistics_to_local_file($statisticsContainer);
 
-    echo '<p>' . get_string('statisticsaddedtolocalfile', 'tool_moodlebox') . '</p>';
+    // echo '<p>' . get_string('statisticsaddedtolocalfile', 'tool_moodlebox') . '</p>';
 
     // Reset the form.
     $statisticsform = new statistics_form(); // TO FIX: checkbox is still checked
@@ -86,6 +82,8 @@ if ($data = $statisticsform->get_data()) {
 
 $collectedstatistics = statistics_lib::collect_statistics_from_file();
 // Display the presence of the local file.
+echo $OUTPUT->box_start('generalbox', 'intro');
+echo '<h3>' . get_string('previousstatisticsheader', 'tool_moodlebox') . '</h3>';
 if (statistics_lib::is_local_file_present()) {
     echo '<p>' . get_string('statisticslocalfilepresent', 'tool_moodlebox') . '</p>';
     echo '<p>' . get_string('statisticscollectednotsent', 'tool_moodlebox', count($collectedstatistics)) . '</p>';
@@ -93,7 +91,8 @@ if (statistics_lib::is_local_file_present()) {
 } else {
     echo '<p>' . get_string('statisticslocalfilenotpresent', 'tool_moodlebox') . '</p>';
 }
-
+echo $OUTPUT->box_end();
+        
 echo $statisticsform->render();
 
 echo $OUTPUT->footer();

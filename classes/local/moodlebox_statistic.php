@@ -101,6 +101,11 @@ abstract class moodlebox_statistic {
         return $this->name;
     }
 
+    public function get_value() : mixed {
+        $value = $this->collecting_function();
+        return $value;
+    }
+
     // protected function
     protected function is_placeholder(string $string): bool {
       // placeholder is a string that contains [[ and ]]
