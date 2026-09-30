@@ -92,12 +92,14 @@ if (statistics_lib::is_local_file_present()) {
         echo '<p>' . get_string('prevstatisticsintro', 'tool_moodlebox') . '</p>';
         echo '<pre>';
         foreach (end($collectedstatistics)->get_fields_iterable() as $statistic) {
-            echo '<p> . <strong>' . $statistic->get_name() . '</strong> - value: ' . $statistic->get_value() . '</p>';
+            echo '<p><strong>' . $statistic->get_name() . '</strong> - value: ' .
+            ($statistic->get_value() ? ' ' . $statistic->get_value() . ' ' : '<strong>null</strong>') .
+            '</p>';
         }
+        echo '</pre>';
     } else {
         echo '<p>' . get_string('statisticslastcollected', 'tool_moodlebox', 'never') . '</p>';
     }
-    echo '</pre>';
 } else {
     echo '<p>' . get_string('statisticslocalfilenotpresent', 'tool_moodlebox') . '</p>';
 }

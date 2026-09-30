@@ -66,6 +66,7 @@ class moodle_version_number extends moodlebox_statistic {
      */
     private function get_version_number(): string {
         global $CFG;
-        return $CFG->version;
+        $version = $CFG->branch . '.' . $CFG->version;
+        return $version;
     }
 }

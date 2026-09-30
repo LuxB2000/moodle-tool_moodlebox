@@ -33,18 +33,18 @@ use tool_moodlebox\local\moodlebox_statistic;
  * @copyright  2026 Jerome Plumat
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class moodlebox_version_number extends moodlebox_statistic {
+class moodlebox_tool_version_number extends moodlebox_statistic {
 
     /**
      * Initialise the statistic with its name and type.
      */
     public function __construct() {
-        $description = "The current MoodleBox image version number";
-        $langstring = get_string('moodlebox_version_numberdescription', 'tool_moodlebox');
+        $description = "The current MoodleBox Tool plugin version number";
+        $langstring = get_string('moodlebox_tool_version_numberdescription', 'tool_moodlebox');
         if (!$this->is_placeholder($langstring)) {
             $description = $langstring;
         }
-        $this->set_statistic_name('moodlebox_version_number');
+        $this->set_statistic_name('moodlebox_tool_version_number');
         $this->set_statistic_type('string');
         $this->set_description($description);
     }
@@ -65,9 +65,7 @@ class moodlebox_version_number extends moodlebox_statistic {
      * @return string The MoodleBox image version number.
      */
     private function get_version_number(): string {
-        // TODO: implement reading the real version from /etc/moodlebox-info.
-        $version = \tool_moodlebox\local\utils::get_moodlebox_info();
-        // error_log("moodlebox_version_number: " . $version);
-        return $version;
+        // TODO: implement reading the real version from the plugin version.php
+        return "0.0.0";
     }
 }
