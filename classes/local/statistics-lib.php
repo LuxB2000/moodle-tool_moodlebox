@@ -96,7 +96,7 @@ class moodlebox_statistics_container {
             error_log('Class ' . $fqcn . ' not found or not a subclass of moodlebox_statistic');
         }
     }
-}
+  }
   
   /**
    * Get the creation date of the statistics container.
@@ -128,78 +128,78 @@ class statistics_lib {
     }
   }
   
-    /**
-     * Check if the local file is present.
-     * 
-     * @return bool True if the local file is present, false otherwise.
-     */
-    public static function is_local_file_present() : bool {
-      self::init();
-      return file_exists(self::$LOCAL_FILE_PATH);
-    }
+  /**
+   * Check if the local file is present.
+   * 
+   * @return bool True if the local file is present, false otherwise.
+   */
+  public static function is_local_file_present() : bool {
+    self::init();
+    return file_exists(self::$LOCAL_FILE_PATH);
+  }
 
-    /**
-     * Create the local file with default content.
-     */
-    public static function create_local_file() : void {
-      self::init();
-      // Create the file with default content.
-      $content = [
-          'statistics' => [],
-      ];
-      // Ensure the directory exists before writing.
-      $dir = dirname(self::$LOCAL_FILE_PATH);
-      if (!is_dir($dir)) {
-          make_writable_directory($dir);
-      }
-      error_log("Creating local file: " . self::$LOCAL_FILE_PATH);
-      file_put_contents(self::$LOCAL_FILE_PATH, json_encode($content));
+  /**
+   * Create the local file with default content.
+   */
+  public static function create_local_file() : void {
+    self::init();
+    // Create the file with default content.
+    $content = [
+        'statistics' => [],
+    ];
+    // Ensure the directory exists before writing.
+    $dir = dirname(self::$LOCAL_FILE_PATH);
+    if (!is_dir($dir)) {
+        make_writable_directory($dir);
     }
+    error_log("Creating local file: " . self::$LOCAL_FILE_PATH);
+    file_put_contents(self::$LOCAL_FILE_PATH, json_encode($content));
+  }
 
-    /**
-     * Empty the local file.
-     * This deletes the file and recreates it with default content.
-     */
-    public static function empty_local_file() : void {
-      self::init();
-      // delete the file
-      unlink(self::$LOCAL_FILE_PATH);
-      // recreate it
-      self::create_local_file();
-    }
+  /**
+   * Empty the local file.
+   * This deletes the file and recreates it with default content.
+   */
+  public static function empty_local_file() : void {
+    self::init();
+    // delete the file
+    unlink(self::$LOCAL_FILE_PATH);
+    // recreate it
+    self::create_local_file();
+  }
     
-    /**
-     * Add statistics to the local file.
-     * This loads the file, adds the input to the "statistics" array that should be present in it and saves it.
-     */
-    public static function add_statistics_to_local_file(moodlebox_statistics_container $statistics) : void {
-      self::init();
-      $content = json_decode(file_get_contents(self::$LOCAL_FILE_PATH), true);
-      if (!isset($content['statistics'])) {
-        throw new Exception('Statistics array not found in local file');
-      }
-      $content['statistics'][] = $statistics->to_json();
-      file_put_contents(self::$LOCAL_FILE_PATH, json_encode($content));
+  /**
+   * Add statistics to the local file.
+   * This loads the file, adds the input to the "statistics" array that should be present in it and saves it.
+   */
+  public static function add_statistics_to_local_file(moodlebox_statistics_container $statistics) : void {
+    self::init();
+    $content = json_decode(file_get_contents(self::$LOCAL_FILE_PATH), true);
+    if (!isset($content['statistics'])) {
+      throw new Exception('Statistics array not found in local file');
     }
+    $content['statistics'][] = $statistics->to_json();
+    file_put_contents(self::$LOCAL_FILE_PATH, json_encode($content));
+  }
 
-    /**
-     * Collect statistics.
-     * This should be called periodically to collect statistics.
-     * 
-     * @return array An array of moodlebox_statistics_container objects.
-     */
-    public static function collect_statistics() : array {
-      self::init();
-      // read the file
-      $content = json_decode(file_get_contents(self::$LOCAL_FILE_PATH), true);
-      if (!isset($content['statistics'])) {
-        throw new Exception('Statistics array not found in local file');
-      }
-      $res = [];
-      foreach ($content['statistics'] as $statistic) {
-        $res[] = new moodlebox_statistics_container($statistic);
-      }
-      return $res;
+  /**
+   * Collect statistics.
+   * This should be called periodically to collect statistics.
+   * 
+   * @return array An array of moodlebox_statistics_container objects.
+   */
+  public static function collect_statistics() : array {
+    self::init();
+    // read the file
+    $content = json_decode(file_get_contents(self::$LOCAL_FILE_PATH), true);
+    if (!isset($content['statistics'])) {
+      throw new Exception('Statistics array not found in local file');
     }
+    $res = [];
+    foreach ($content['statistics'] as $statistic) {
+      $res[] = new moodlebox_statistics_container($statistic);
+    }
+    return $res;
+  }
 }
 

@@ -18,17 +18,17 @@ namespace tool_moodlebox\local\statistics;
 use tool_moodlebox\local\moodlebox_statistic;
 
 class moodle_version_number extends moodlebox_statistic {
-    public function __construct() {
-        $this->set_statistic_name('moodle_version_number');
-        $this->set_statistic_type('string');
-    }
-    
-    public function collecting_function() : string {
-        return $this->get_version_number();
-    }
-    
-    private function get_version_number() : string {
-        global $CFG;
-        return $CFG->version;
-    }
+  public function __construct() {
+    $this->set_statistic_name('moodle_version_number');
+    $this->set_statistic_type('string');
+  }
+
+  public function collecting_function() : string {
+    return $this->get_version_number();
+  }
+
+  private function get_version_number() : string {
+    global $CFG;
+    return $CFG->version;
+  }
 }
