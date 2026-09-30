@@ -1,5 +1,14 @@
 ## Files specific to this project
 
+# Local dev override for symlinked Moodle installations (dev only)
+local_moodle_path.php
+
+# Statistics metadata file (generated dynamically)
+statistics-metadata.json
+
+# doc file
+*.md
+
 # Node and Grunt files
 node_modules
 
@@ -9,7 +18,8 @@ node_modules
 .LSOverride
 
 # Icon must end with two \r
-Icon[]
+Icon[
+]
 
 # Thumbnails
 ._*

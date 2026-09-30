@@ -158,3 +158,8 @@ $string['wifissidinvalid'] = 'The name of the Wi-Fi network (SSID) provided is i
 // Deprecated since 2023-06-11.
 $string['showbuttonsinfooter'] = 'Show restart and shutdown buttons in footer';
 $string['showbuttonsinfooter_desc'] = 'If enabled, the restart and shutdown buttons are displayed in the footer of all pages of the site when logged in as an administrator or as a manager.';
+
+$string['statisticscollectedandsent'] = 'Statistics collected and sent';
+$string['statisticssettingsheading'] = 'Statistics';
+$string['testcollectingstatistics'] = 'Test collecting statistics';
+$string['testcollectingstatistics_desc'] = 'Test collecting statistics';

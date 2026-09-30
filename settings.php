@@ -36,6 +36,14 @@ if ($hassiteconfig) { // Speedup for non-admins.
     );
     $ADMIN->add('moodlebox', $moodleboxadminpage);
 
+    // Add admin external page 'statistics' to category 'moodlebox'.
+    $moodleboxstatisticspage = new admin_externalpage(
+        'tool_moodlebox_statistics',
+        new lang_string('statisticssettingsheading', 'tool_moodlebox'),
+        new moodle_url('/admin/tool/moodlebox/statistics.php')
+    );
+    $ADMIN->add('moodlebox', $moodleboxstatisticspage);
+
     // Add admin setting page to category 'moodlebox'.
     $moodleboxsettingpage = new admin_settingpage(
         'tool_moodlebox_settings',
@@ -84,6 +92,26 @@ if ($hassiteconfig) { // Speedup for non-admins.
             new lang_string('ihavedonated_desc', 'tool_moodlebox'),
             0
         ));
+
+        // Statistics section.
+        $moodleboxsettingpage->add(new admin_setting_heading(
+            'moodlebox_statisticssettingsheading',
+            new lang_string('statisticssettingsheading', 'tool_moodlebox'),
+            ''
+        ));
+
+        // Link to the statistics test page.
+        $statisticsurl = new moodle_url('/admin/tool/moodlebox/statistics-page.php');
+        $moodleboxsettingpage->add(new admin_setting_description(
+            'tool_moodlebox/statisticslink',
+            '',
+            html_writer::link(
+                $statisticsurl,
+                get_string('testcollectingstatistics', 'tool_moodlebox'),
+                ['class' => 'btn btn-secondary']
+            )
+        ));
+
     }
     $ADMIN->add('moodlebox', $moodleboxsettingpage);
 
