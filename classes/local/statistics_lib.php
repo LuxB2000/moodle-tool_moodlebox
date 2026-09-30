@@ -112,6 +112,9 @@ class statistics_lib {
      */
     public static function collect_statistics_from_file(): array {
         self::init();
+        if (!file_exists(self::$localfilepath)) {
+            return [];
+        }
         $content = json_decode(file_get_contents(self::$localfilepath), true);
         if (!isset($content['statistics'])) {
             throw new \coding_exception('Statistics array not found in local file');
