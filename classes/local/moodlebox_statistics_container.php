@@ -52,6 +52,7 @@ class moodlebox_statistics_container {
     private int $creationdate;
 
     /** @var array Collected statistic fields, keyed by statistic name. */
+    // an arry of moodlebox_statistic objects
     private array $fields = [];
 
     /**
@@ -98,6 +99,7 @@ class moodlebox_statistics_container {
 
     /**
      * Discover and run all statistic collectors found in the statistics/ sub-directory.
+     * This will replace any existing fields with the same name in the container.
      *
      * Each PHP file in the statistics/ directory is expected to define a concrete subclass
      * of {@see moodlebox_statistic} whose class name matches the filename (without .php).
