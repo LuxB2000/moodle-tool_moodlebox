@@ -69,7 +69,7 @@ class moodlebox_statistics_container {
                 error_log("[moodblebox_statistics_container::__construct] Invalid JSON string: " . $jsonstring);
                 return;
             }
-            
+
             $raw = json_decode($jsonstring, true);
             foreach ($raw as $key => $statvalue) {
                 $type = $statvalue['type'];
@@ -95,18 +95,6 @@ class moodlebox_statistics_container {
     public function get_fields_iterable() {
         return $this->fields;
     }
-
-    /**
-     * Add an arbitrary key/value field to this container.
-     *
-     * @param string $key The field key.
-     * @param mixed $value The field value.
-     */
-    // THIS SHOULD NOT BE USED see collect() method, we should refere to local statistics classes,
-    // the input must refer to the class name define in the php /local/statistics/ folder
-    // public function add_field(string $key, mixed $value): void {
-    //     $this->fields[$key] = $value;
-    // }
 
     /**
      * Discover and run all statistic collectors found in the statistics/ sub-directory.
