@@ -173,3 +173,5 @@ $string['statisticsinformation'] = 'Statistics are anonymous data collected on y
 $string['statisticstestok'] = 'Test successful!';
 $string['testcollectingstatistics'] = 'Test collecting statistics';
 $string['testcollectingstatistics_desc'] = 'Test collecting statistics';
+$string['moodle_version_numberdescription'] = 'The current Moodle version number ...';
+$string['moodlebox_version_numberdescription'] = 'The current MoodleBox image version number ...';

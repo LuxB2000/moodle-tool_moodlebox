@@ -49,7 +49,12 @@ class moodlebox_statistics_container {
         $this->creationdate = time();
         if ($jsonstring !== null) {
             $this->fields = json_decode($jsonstring, true);
+            // TODO if creationdate is present, use it
         }
+    }
+
+    public function get_fields_iterable() {
+        return $this->fields;
     }
 
     /**
@@ -58,6 +63,8 @@ class moodlebox_statistics_container {
      * @param string $key The field key.
      * @param mixed $value The field value.
      */
+    // THIS SHOULD NOT BE USED see collect() method, we should refere to local statistics classes,
+    // the input must refer to the class name define in the php /local/statistics/ folder
     public function add_field(string $key, mixed $value): void {
         $this->fields[$key] = $value;
     }
@@ -75,7 +82,7 @@ class moodlebox_statistics_container {
         $files = glob($statisticsdir . '/*.php');
 
         if ($files === false || empty($files)) {
-            return;
+            return  ;
         }
 
         foreach ($files as $file) {
@@ -93,7 +100,7 @@ class moodlebox_statistics_container {
                 && is_subclass_of($fqcn, '\\tool_moodlebox\\local\\moodlebox_statistic');
             if ($isvalidstatistic) {
                 $instance = new $fqcn();
-                $this->fields[$instance->name] = $instance->to_array();
+                $this->fields[$instance->get_name()] = $instance;
             }
         }
     }
@@ -114,7 +121,9 @@ class moodlebox_statistics_container {
      */
     public function to_json(): string {
         $content = ['creationdate' => $this->get_date()];
-        $content = array_merge($content, $this->fields);
+        foreach ($this->fields as $field) {
+            $content[$field->get_name()] = $field->to_array();
+        }
         return json_encode($content);
     }
 }

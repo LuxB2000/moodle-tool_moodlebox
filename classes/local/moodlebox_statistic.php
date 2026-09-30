@@ -37,10 +37,13 @@ namespace tool_moodlebox\local;
 abstract class moodlebox_statistic {
 
     /** @var string The identifier name of this statistic. */
-    public string $name = '';
+    protected string $name = '';
 
     /** @var string The data type of this statistic value. One of: string, number, boolean, array, object. */
-    public string $type = '';
+    protected string $type = '';
+
+    /** @var string The description of this statistic. */
+    protected string $description = '';
 
     /**
      * Set the identifier name of this statistic.
@@ -63,6 +66,15 @@ abstract class moodlebox_statistic {
     }
 
     /**
+     * Set the description of this statistic.
+     *
+     * @param string $description The description of the statistic.
+     */
+    public function set_description(string $description): void {
+        $this->description = $description;
+    }
+
+    /**
      * Return the statistic as an associative array.
      *
      * @return array The statistic data with name, type and value keys.
@@ -72,7 +84,27 @@ abstract class moodlebox_statistic {
             'name' => $this->name,
             'type' => $this->type,
             'value' => $this->collecting_function(),
+            // 'description' => $this->get_description(), // we don't want the description since it's a local string (translation is used when possible)
         ];
+    }
+
+    /**
+     * Get the description of this statistic.
+     *
+     * @return string The description of the statistic.
+     */
+    public function get_description(): string {
+        return $this->description;
+    }
+
+    public function get_name(): string {
+        return $this->name;
+    }
+
+    // protected function
+    protected function is_placeholder(string $string): bool {
+      // placeholder is a string that contains [[ and ]]
+      return str_contains($string, '[[') && str_contains($string, ']]');
     }
 
     /**

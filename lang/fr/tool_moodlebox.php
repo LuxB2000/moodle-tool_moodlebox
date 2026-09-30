@@ -38,3 +38,5 @@ $string['statisticsinformation'] = 'Les statistiques sont des données anonymes 
 $string['statisticstestok'] = 'Test réussi !';
 $string['testcollectingstatistics'] = 'Tester la collecte de statistiques';
 $string['testcollectingstatistics_desc'] = 'Tester la collecte de statistiques';
+$string['moodle_version_numberdescription'] = 'La version actuelle de Moodle';
+$string['moodlebox_version_numberdescription'] = 'La version actuelle de l\'image MoodleBox';

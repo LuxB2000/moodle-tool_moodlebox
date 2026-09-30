@@ -50,6 +50,16 @@ echo $OUTPUT->box_start('generalbox', 'intro');
 echo $OUTPUT->box(get_string('statisticsinformation', 'tool_moodlebox'));
 echo $OUTPUT->box_end();
 
+
+echo $OUTPUT->box_start('generalbox', 'form');
+echo 'Current statistics:';
+$currentstatistics = new moodlebox_statistics_container();
+$currentstatistics->collect();
+foreach ($currentstatistics->get_fields_iterable() as $key => $statistic) {
+    echo $OUTPUT->box($statistic->get_name() . ': ' . $statistic->get_description());
+}
+echo $OUTPUT->box_end();
+
 if ($data = $statisticsform->get_data()) {
     $reset = $data->reset;
     // TODO: run the actual statistics collection and sending logic here.
@@ -63,10 +73,10 @@ if ($data = $statisticsform->get_data()) {
         statistics_lib::empty_local_file();
     }
     // 2. Create a statistics container and collect data.
-    $statistics = new moodlebox_statistics_container();
-    $statistics->collect();
+    $statisticsContainer = new moodlebox_statistics_container();
+    $statisticsContainer->collect();
     // 3. Append the statistics to the local file.
-    statistics_lib::add_statistics_to_local_file($statistics);
+    statistics_lib::add_statistics_to_local_file($statisticsContainer);
 
     echo '<p>' . get_string('statisticsaddedtolocalfile', 'tool_moodlebox') . '</p>';
 
@@ -74,7 +84,7 @@ if ($data = $statisticsform->get_data()) {
     $statisticsform = new statistics_form(); // TO FIX: checkbox is still checked
 }
 
-$collectedstatistics = statistics_lib::collect_statistics();
+$collectedstatistics = statistics_lib::collect_statistics_from_file();
 // Display the presence of the local file.
 if (statistics_lib::is_local_file_present()) {
     echo '<p>' . get_string('statisticslocalfilepresent', 'tool_moodlebox') . '</p>';

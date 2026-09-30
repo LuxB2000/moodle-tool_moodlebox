@@ -110,7 +110,7 @@ class statistics_lib {
      * @return moodlebox_statistics_container[] Array of statistics containers.
      * @throws \coding_exception If the statistics array key is missing from the file.
      */
-    public static function collect_statistics(): array {
+    public static function collect_statistics_from_file(): array {
         self::init();
         $content = json_decode(file_get_contents(self::$localfilepath), true);
         if (!isset($content['statistics'])) {

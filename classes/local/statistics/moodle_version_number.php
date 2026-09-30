@@ -39,8 +39,14 @@ class moodle_version_number extends moodlebox_statistic {
      * Initialise the statistic with its name and type.
      */
     public function __construct() {
+        $description = "The current Moodle version number";
+        $langstring = get_string('moodle_version_numberdescription', 'tool_moodlebox');
+        if (!$this->is_placeholder($langstring)) {
+            $description = $langstring;
+        }
         $this->set_statistic_name('moodle_version_number');
         $this->set_statistic_type('string');
+        $this->set_description($description);
     }
 
     /**
