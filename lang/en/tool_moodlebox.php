@@ -159,6 +159,7 @@ $string['wifissidinvalid'] = 'The name of the Wi-Fi network (SSID) provided is i
 $string['showbuttonsinfooter'] = 'Show restart and shutdown buttons in footer';
 $string['showbuttonsinfooter_desc'] = 'If enabled, the restart and shutdown buttons are displayed in the footer of all pages of the site when logged in as an administrator or as a manager.';
 
+
 // Statistics page strings
 $string['reset'] = 'Reset';
 $string['reset_help'] = 'When checked, the local statistics file will be emptied before collecting new statistics. Use this option to discard previously accumulated data and start fresh.';
@@ -185,3 +186,6 @@ $string['maxfilesize_help'] = 'The maximum file size (in kilobytes) that can be 
 $string['saveconfiguration'] = 'Save configuration';
 $string['statisticsresultofsend'] = 'Result of send: {$a}';
 $string['statisticserrorofsend'] = 'Error while sending: {$a}';
+
+// Scheduled task strings.
+$string['checkinternet_taskname'] = 'Check internet connectivity';

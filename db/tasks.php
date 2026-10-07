@@ -15,20 +15,26 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Scheduled task definitions for tool_moodlebox.
  *
  * @package    tool_moodlebox
- * @copyright  2016 onwards Nicolas Martignoni {@link mailto:nicolas@martignoni.net}
+ * @copyright  2026 Jerome Plumat
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die;
+defined('MOODLE_INTERNAL') || die();
 
-$plugin = new stdClass();
-
-$plugin->version  = 20261007001;
-$plugin->release = '3.3.1';
-$plugin->requires = 2024042200;
-$plugin->supported = [404, 502];
-$plugin->maturity = MATURITY_STABLE;
-$plugin->component = 'tool_moodlebox';
+$tasks = [
+    [
+        // Check whether the device has internet access every 2 minutes.
+        // When connected, pending statistics will be sent in a later iteration.
+        // TODO : find correct default value
+        'classname'  => \tool_moodlebox\task\collect_and_send_statistics::class,
+        'blocking'   => 0,
+        'minute'     => '*/2',
+        'hour'       => '*',
+        'day'        => '*',
+        'month'      => '*',
+        'dayofweek'  => '*',
+    ],
+];

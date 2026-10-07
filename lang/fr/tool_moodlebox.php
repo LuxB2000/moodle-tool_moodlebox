@@ -50,3 +50,7 @@ $string['maxfilesize_help'] = 'La taille maximale des fichiers qui peuvent être
 $string['saveconfiguration'] = 'Sauvegarder la configuration';
 $string['statisticsresultofsend'] = 'Résultat de l\'envoi : {$a}';
 $string['statisticserrorofsend'] = 'Erreur lors de l\'envoi : {$a}';
+
+
+// Chaînes pour les tâches planifiées.
+$string['checkinternet_taskname'] = 'Vérifier la connexion internet';
