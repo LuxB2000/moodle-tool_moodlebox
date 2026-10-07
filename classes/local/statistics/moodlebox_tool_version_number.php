@@ -60,12 +60,15 @@ class moodlebox_tool_version_number extends moodlebox_statistic {
     }
 
     /**
-     * Read the MoodleBox image version number from the system.
+     * Read the MoodleBox tool plugin version number via the Moodle plugin manager.
      *
-     * @return string The MoodleBox image version number.
+     * @return string The MoodleBox tool plugin release string (e.g. '3.3.1'), or empty string if unavailable.
      */
     private function get_version_number(): string {
-        // TODO: implement reading the real version from the plugin version.php
-        return "0.0.0";
+        $plugininfo = \core_plugin_manager::instance()->get_plugin_info('tool_moodlebox');
+        if ($plugininfo === null) {
+            return '';
+        }
+        return $plugininfo->release ?? '';
     }
 }
