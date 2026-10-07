@@ -47,6 +47,7 @@ $statisticsform = new statistics_form();
 echo $OUTPUT->header();
 echo $OUTPUT->heading($strheading);
 
+// == Render introduction and current statistics ==
 echo $OUTPUT->box_start('generalbox', 'form');
 echo '<h3>' . get_string('currentstatisticsheader', 'tool_moodlebox') . '</h3>';
 echo $OUTPUT->box(get_string('statisticsinformation', 'tool_moodlebox'));
@@ -57,6 +58,7 @@ foreach ($currentstatistics->get_fields_iterable() as $key => $statistic) {
 }
 echo $OUTPUT->box_end();
 
+// == Collect form data if form has been submitted ==
 $restultofsend = null;
 $errorofsend = null;
 if ($data = $statisticsform->get_data()) {
@@ -92,23 +94,22 @@ if ($data = $statisticsform->get_data()) {
         try{
             statistics_lib::send_statistics($allstatistics);
             $restultofsend = 'success';
-            // TODO: clean ONLY the statistics from local file
+            // TODO: 4.2 clean ONLY the statistics from local file
         } catch (\Exception $e) {
             error_log('Error sending statistics: ' . $e->getMessage(), DEBUG_DEVELOPER);
             // TODO: save the error in the statistics container and save it as "resut of sending that day". in meta-data file ?
             $errorofsend = $e->getMessage();
+            // 4.3. Append the statistics to the local file.
+            statistics_lib::add_statistics_to_local_file($statisticscontainer);
         }
-        // 5. Append the statistics to the local file.
-        // TODO : do it only in case of error
-        statistics_lib::add_statistics_to_local_file($statisticscontainer);
     }
 
     // Reset the form.
     $statisticsform = new statistics_form(); // TO FIX: checkbox is still checked
 }
 
+// == Render previous statistics ==
 $collectedstatistics = statistics_lib::collect_statistics_from_file();
-// Present the last collected statistics if any
 echo $OUTPUT->box_start('generalbox', 'intro');
 echo '<h3>' . get_string('previousstatisticsheader', 'tool_moodlebox') . '</h3>';
 if (statistics_lib::is_local_file_present()) {
@@ -132,6 +133,7 @@ if (statistics_lib::is_local_file_present()) {
 }
 echo $OUTPUT->box_end();
 
+// == Render result of sending statistics to server ==
 if ($restultofsend) {
     echo $OUTPUT->box_start('generalbox', 'intro');
     echo '<p>' . get_string('statisticsresultofsend', 'tool_moodlebox', $restultofsend) . '</p>';
