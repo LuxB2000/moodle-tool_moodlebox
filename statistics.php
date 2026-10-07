@@ -87,7 +87,7 @@ if ($data = $statisticsform->get_data()) {
         $statisticscontainer->collect();
 
         // 3. Get all the local statistics
-        $localstatisticcontainers = statistics_lib::collect_statistics_from_file();
+        $localstatisticcontainers = statistics_lib::get_statistics_from_file();
         
         // 4. Send the statistics to the server.
         $allstatistics = array_merge($localstatisticcontainers, [$statisticscontainer]);
@@ -109,7 +109,7 @@ if ($data = $statisticsform->get_data()) {
 }
 
 // == Render previous statistics ==
-$collectedstatistics = statistics_lib::collect_statistics_from_file();
+$collectedstatistics = statistics_lib::get_statistics_from_file();
 echo $OUTPUT->box_start('generalbox', 'intro');
 echo '<h3>' . get_string('previousstatisticsheader', 'tool_moodlebox') . '</h3>';
 if (statistics_lib::is_local_file_present()) {
