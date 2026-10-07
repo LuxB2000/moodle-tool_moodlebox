@@ -15,20 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
+ * Plugin configuration constants for Tool MoodleBox configuration.
  *
  * @package    tool_moodlebox
- * @copyright  2016 onwards Nicolas Martignoni {@link mailto:nicolas@martignoni.net}
+ * @copyright  2026 Jerome Plumat
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+namespace tool_moodlebox\local;
 
-defined('MOODLE_INTERNAL') || die;
+class plugin_config {
+    // Developer-controlled — users cannot change these.
+    // Update in code when releasing a new plugin version.
+    // TODO: define the production server URL
+    const STATISTICS_SERVER_URL = 'http://127.0.0.1:3000';
 
-$plugin = new stdClass();
-
-$plugin->version  = 20261007000;
-$plugin->release = '3.3.1';
-$plugin->requires = 2024042200;
-$plugin->supported = [404, 502];
-$plugin->maturity = MATURITY_STABLE;
-$plugin->component = 'tool_moodlebox';
+    // Defaults for user-configurable settings.
+    // Used as fallback when no value is saved yet.
+    const DEFAULT_MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
+}

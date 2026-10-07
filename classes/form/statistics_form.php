@@ -52,7 +52,10 @@ class statistics_form extends moodleform {
         $mform->addElement('header', 'config', get_string('config', 'tool_moodlebox'));
         $mform->addElement('text', 'maxfilesize', get_string('maxfilesize', 'tool_moodlebox'));
         $mform->setType('maxfilesize', PARAM_INT);
-        $mform->setDefault('maxfilesize', (int)($config['maxfilesize'] / 1024)); // plot with kB units
+        $mform->setDefault(
+            'maxfilesize',
+            (int)($config['maxfilesize'] / 1024) // rendered with kB units
+        );
         $mform->addHelpButton('maxfilesize', 'maxfilesize', 'tool_moodlebox');
 
         // reset

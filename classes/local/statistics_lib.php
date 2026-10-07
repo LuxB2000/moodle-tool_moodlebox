@@ -69,8 +69,7 @@ class statistics_lib {
         $content = [
             'statistics' => [],
             'configuration' => [
-                // TODO: decide where to put default values
-                'maxfilesize' => 2 * 1024 * 1024, // 2MB
+                'maxfilesize' => (\tool_moodlebox\local\plugin_config::DEFAULT_MAX_FILE_SIZE),
             ],
         ];
         $dir = dirname(self::$localfilepath);
@@ -138,7 +137,10 @@ class statistics_lib {
         if (!isset($content['configuration'])) {
             throw new \coding_exception('Configuration array not found in local file');
         }
-        return $content['configuration'];
+        return array_merge(
+            ['maxfilesize' => plugin_config::DEFAULT_MAX_FILE_SIZE], // fallback
+            $content['configuration'] ?? []
+        );
     }
 
     public static function save_configuration_to_file($newconfig): void {
