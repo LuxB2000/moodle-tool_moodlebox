@@ -26,8 +26,9 @@ defined('MOODLE_INTERNAL') || die();
 
 $tasks = [
     [
-        // Check whether the device has internet access every 2 minutes.
-        // When connected, pending statistics will be sent in a later iteration.
+        // Run the scripts regularly to check internet connectivity and send statistics.
+        // TODO : IDEA : If recent stats have been sent, no need to check every two minutes. But if statistics accumulate,
+        //        we should check more often. Possible ?
         // TODO : find correct default value
         'classname'  => \tool_moodlebox\task\collect_and_send_statistics::class,
         'blocking'   => 0,
