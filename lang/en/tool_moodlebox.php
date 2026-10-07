@@ -179,3 +179,7 @@ $string['currentstatisticsheader'] = 'Information on currently collected statist
 $string['previousstatisticsheader'] = 'Information on previously collected statistics';
 $string['prevstatisticsintro'] = 'Here are the last collected statistics:';
 $string['moodlebox_tool_version_numberdescription'] = 'The current MoodleBox tool version number';
+$string['config'] = 'Configuration';
+$string['maxfilesize'] = 'Maximum file size (kB)';
+$string['maxfilesize_help'] = 'The maximum file size (in kilobytes) that can be collected by the moodlebox tool. When the maximal size is reached, the tool will delete old statistics before adding new.';
+$string['saveconfiguration'] = 'Save configuration';

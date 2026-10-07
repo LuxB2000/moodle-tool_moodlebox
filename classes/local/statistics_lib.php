@@ -66,7 +66,13 @@ class statistics_lib {
      */
     public static function create_local_file(): void {
         self::init();
-        $content = ['statistics' => []];
+        $content = [
+            'statistics' => [],
+            'configuration' => [
+                // TODO: decide where to put default values
+                'maxfilesize' => 2 * 1024 * 1024, // 2MB
+            ],
+        ];
         $dir = dirname(self::$localfilepath);
         if (!is_dir($dir)) {
             make_writable_directory($dir);
@@ -124,5 +130,24 @@ class statistics_lib {
             $result[] = new moodlebox_statistics_container($statistic);
         }
         return $result;
+    }
+
+    public static function get_configuration_from_file(): array {
+        self::init();
+        $content = json_decode(file_get_contents(self::$localfilepath), true);
+        if (!isset($content['configuration'])) {
+            throw new \coding_exception('Configuration array not found in local file');
+        }
+        return $content['configuration'];
+    }
+
+    public static function save_configuration_to_file($newconfig): void {
+        self::init();
+        $content = json_decode(file_get_contents(self::$localfilepath), true);
+        if (!isset($content['configuration'])) {
+            throw new \coding_exception('Configuration array not found in local file');
+        }
+        $content['configuration'] = $newconfig;
+        file_put_contents(self::$localfilepath, json_encode($content));
     }
 }

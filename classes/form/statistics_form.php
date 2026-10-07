@@ -44,12 +44,27 @@ class statistics_form extends moodleform {
      */
     public function definition() {
         $mform = $this->_form;
+
+        // get current config
+        $config = \tool_moodlebox\local\statistics_lib::get_configuration_from_file();
+
+        // config
+        $mform->addElement('header', 'config', get_string('config', 'tool_moodlebox'));
+        $mform->addElement('text', 'maxfilesize', get_string('maxfilesize', 'tool_moodlebox'));
+        $mform->setType('maxfilesize', PARAM_INT);
+        $mform->setDefault('maxfilesize', (int)($config['maxfilesize'] / 1024)); // plot with kB units
+        $mform->addHelpButton('maxfilesize', 'maxfilesize', 'tool_moodlebox');
+
+        // reset
         $mform->addElement('advcheckbox', 'reset', get_string('reset', 'tool_moodlebox'));
         $mform->addHelpButton('reset', 'reset', 'tool_moodlebox');
 
-        $this->add_action_buttons(
-            false,
-            get_string('testcollectingstatistics', 'tool_moodlebox')
-        );
+        $buttonarray = [];
+        $buttonarray[] = $mform->createElement('submit', 'saveconfiguration',
+            get_string('saveconfiguration', 'tool_moodlebox'));
+        $buttonarray[] = $mform->createElement('submit', 'testcollectingstatistics',
+            get_string('testcollectingstatistics', 'tool_moodlebox'));
+        $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
+        $mform->closeHeaderBefore('buttonar');
     }
 }

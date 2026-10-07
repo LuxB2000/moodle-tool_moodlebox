@@ -58,20 +58,32 @@ foreach ($currentstatistics->get_fields_iterable() as $key => $statistic) {
 echo $OUTPUT->box_end();
 
 if ($data = $statisticsform->get_data()) {
-    // 1. If the file is not created, then create it.
-    if (!statistics_lib::is_local_file_present()) {
-        statistics_lib::create_local_file();
+    // find wich button has been clicked
+    // do we want to save config ?
+    // or to run the test ?
+    if (isset($data->saveconfiguration)) {
+        // Save configuration
+        $config = [
+            'maxfilesize' => $data->maxfilesize * 1024, // convert from kB to B
+        ];
+        statistics_lib::save_configuration_to_file($config);
+    } elseif (isset($data->testcollectingstatistics)) {
+        // Run test     
+        // 1. If the file is not created, then create it.
+        if (!statistics_lib::is_local_file_present()) {
+            statistics_lib::create_local_file();
+        }
+        $reset = $data->reset;
+        // 1.1 If reset is true, empty the file.
+        if ($reset) {
+            statistics_lib::empty_local_file();
+        }
+        // 2. Create a statistics container and collect new data.
+        $statisticsContainer = new moodlebox_statistics_container();
+        $statisticsContainer->collect();
+        // 3. Append the statistics to the local file.
+        statistics_lib::add_statistics_to_local_file($statisticsContainer);
     }
-    $reset = $data->reset;
-    // 1.1 If reset is true, empty the file.
-    if ($reset) {
-        statistics_lib::empty_local_file();
-    }
-    // 2. Create a statistics container and collect new data.
-    $statisticsContainer = new moodlebox_statistics_container();
-    $statisticsContainer->collect();
-    // 3. Append the statistics to the local file.
-    statistics_lib::add_statistics_to_local_file($statisticsContainer);
 
     // Reset the form.
     $statisticsform = new statistics_form(); // TO FIX: checkbox is still checked
