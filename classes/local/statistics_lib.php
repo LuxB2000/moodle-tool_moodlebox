@@ -152,4 +152,42 @@ class statistics_lib {
         $content['configuration'] = $newconfig;
         file_put_contents(self::$localfilepath, json_encode($content));
     }
+
+    /**
+     * Send statistics to the server.
+     *
+     * Uses Moodle's curl wrapper to respect proxy settings and
+     * curlsecurityblockedhosts restrictions.
+     *
+     * @param array $statisticscontainers Array of statistics containers.
+     * @throws \moodle_exception If the server URL is not defined or the request fails.
+     */
+    public static function send_statistics(array $statisticscontainers): void {
+        $serverurl = plugin_config::STATISTICS_SERVER_URL;
+        if (empty($serverurl)) {
+            throw new \coding_exception('Server URL is not defined');
+        }
+
+        $jsondata = [];
+        foreach ($statisticscontainers as $statisticscontainer) {
+            $jsondata[] = $statisticscontainer->to_array();
+        }
+
+        $curl = new \curl();
+        $curl->setHeader(['Content-Type: application/json', 'Accept: application/json']);
+        $response = $curl->post($serverurl, json_encode($jsondata));
+
+        $info = $curl->get_info();
+        $errno = $curl->get_errno();
+        if ($errno) {
+            $erromsg = 'curl error ' . $errno . ': ' . $curl->error;
+            error_log('Error sending statistics: ' . $erromsg, DEBUG_DEVELOPER);
+            throw new \moodle_exception('error', 'tool_moodlebox', '', null, $erromsg);
+        }
+        if (empty($info['http_code']) || $info['http_code'] >= 400) {
+            $erromsg = 'Server returned HTTP ' . ($info['http_code'] ?? '0') . ': ' . $response;
+            error_log('Error sending statistics: ' . $erromsg, DEBUG_DEVELOPER);
+            throw new \moodle_exception('error', 'tool_moodlebox', '', null, $erromsg);
+        }
+    }
 }

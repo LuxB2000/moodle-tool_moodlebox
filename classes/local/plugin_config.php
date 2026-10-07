@@ -27,7 +27,7 @@ class plugin_config {
     // Developer-controlled — users cannot change these.
     // Update in code when releasing a new plugin version.
     // TODO: define the production server URL
-    const STATISTICS_SERVER_URL = 'http://127.0.0.1:3000';
+    const STATISTICS_SERVER_URL = 'http://127.0.0.1:3000/statistics';
 
     // Defaults for user-configurable settings.
     // Used as fallback when no value is saved yet.

@@ -57,6 +57,8 @@ foreach ($currentstatistics->get_fields_iterable() as $key => $statistic) {
 }
 echo $OUTPUT->box_end();
 
+$restultofsend = null;
+$errorofsend = null;
 if ($data = $statisticsform->get_data()) {
     // find wich button has been clicked
     // do we want to save config ?
@@ -79,10 +81,26 @@ if ($data = $statisticsform->get_data()) {
             statistics_lib::empty_local_file();
         }
         // 2. Create a statistics container and collect new data.
-        $statisticsContainer = new moodlebox_statistics_container();
-        $statisticsContainer->collect();
-        // 3. Append the statistics to the local file.
-        statistics_lib::add_statistics_to_local_file($statisticsContainer);
+        $statisticscontainer = new moodlebox_statistics_container();
+        $statisticscontainer->collect();
+
+        // 3. Get all the local statistics
+        $localstatisticcontainers = statistics_lib::collect_statistics_from_file();
+        
+        // 4. Send the statistics to the server.
+        $allstatistics = array_merge($localstatisticcontainers, [$statisticscontainer]);
+        try{
+            statistics_lib::send_statistics($allstatistics);
+            $restultofsend = 'success';
+            // TODO: clean ONLY the statistics from local file
+        } catch (\Exception $e) {
+            error_log('Error sending statistics: ' . $e->getMessage(), DEBUG_DEVELOPER);
+            // TODO: save the error in the statistics container and save it as "resut of sending that day". in meta-data file ?
+            $errorofsend = $e->getMessage();
+        }
+        // 5. Append the statistics to the local file.
+        // TODO : do it only in case of error
+        statistics_lib::add_statistics_to_local_file($statisticscontainer);
     }
 
     // Reset the form.
@@ -113,6 +131,17 @@ if (statistics_lib::is_local_file_present()) {
     echo '<p>' . get_string('statisticslocalfilenotpresent', 'tool_moodlebox') . '</p>';
 }
 echo $OUTPUT->box_end();
+
+if ($restultofsend) {
+    echo $OUTPUT->box_start('generalbox', 'intro');
+    echo '<p>' . get_string('statisticsresultofsend', 'tool_moodlebox', $restultofsend) . '</p>';
+    echo $OUTPUT->box_end();
+}
+if ($errorofsend) {
+    echo $OUTPUT->box_start('generalbox', 'intro');
+    echo '<p>' . get_string('statisticserrorofsend', 'tool_moodlebox', $errorofsend) . '</p>';
+    echo $OUTPUT->box_end();
+}
         
 echo $statisticsform->render();
 

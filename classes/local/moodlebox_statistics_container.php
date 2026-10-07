@@ -160,4 +160,17 @@ class moodlebox_statistics_container {
         }
         return json_encode($content);
     }
+
+    public function to_array(): array {
+        $creationDateRecord = [
+            'name' => 'creationdate',
+            'type' => 'string',
+            'value' => $this->get_date(),
+        ];
+        $content = ['creationdate' => $creationDateRecord];
+        foreach ($this->fields as $field) {
+            $content[$field->get_name()] = $field->to_array();
+        }
+        return $content;
+    }
 }
