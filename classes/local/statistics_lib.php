@@ -154,10 +154,9 @@ class statistics_lib {
     }
 
     /**
-     * Send statistics to the server.
+     * Send statistics to the server as a POST request.
      *
-     * Uses Moodle's curl wrapper to respect proxy settings and
-     * curlsecurityblockedhosts restrictions.
+     * Uses Moodle's curl wrapper to respect proxy settings and curlsecurityblockedhosts restrictions.
      *
      * @param array $statisticscontainers Array of statistics containers.
      * @throws \moodle_exception If the server URL is not defined or the request fails.
