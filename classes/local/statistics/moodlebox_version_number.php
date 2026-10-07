@@ -65,9 +65,12 @@ class moodlebox_version_number extends moodlebox_statistic {
      * @return string The MoodleBox image version number.
      */
     private function get_version_number(): string {
-        // TODO: implement reading the real version from /etc/moodlebox-info.
+        /// TODO: implement reading the real version from the plugin version.php
         $version = \tool_moodlebox\local\utils::get_moodlebox_info();
-        // error_log("moodlebox_version_number: " . $version);
-        return $version;
+        if ($version === false) {
+            return 'moodlebox plugin not available';
+        }
+        $versionStr = $version['version'];
+        return $versionStr;
     }
 }
