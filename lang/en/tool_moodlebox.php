@@ -186,6 +186,11 @@ $string['maxfilesize_help'] = 'The maximum file size (in kilobytes) that can be 
 $string['saveconfiguration'] = 'Save configuration';
 $string['statisticsresultofsend'] = 'Result of send: {$a}';
 $string['statisticserrorofsend'] = 'Error while sending: {$a}';
+$string['stopcollectingstatistics'] = 'Stop collecting statistics';
+$string['stopcollectingstatistics_desc'] = 'Stop collecting statistics';
+$string['startcollectingstatistics'] = 'Start collecting statistics';
+$string['startcollectingstatistics_desc'] = 'Start collecting statistics';
+$string['statisticscollectiondisabled'] = 'Statistics collection is disabled';
 
 // Scheduled task strings.
 $string['checkinternet_taskname'] = 'Check internet connectivity';

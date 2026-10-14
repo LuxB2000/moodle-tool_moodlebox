@@ -43,6 +43,7 @@ class statistics_form extends moodleform {
      * Define the form elements.
      */
     public function definition() {
+        $iscollecting = \tool_moodlebox\local\statistics_lib::is_statistics_collect_enabled();
         $mform = $this->_form;
 
         // get current config
@@ -67,6 +68,10 @@ class statistics_form extends moodleform {
             get_string('saveconfiguration', 'tool_moodlebox'));
         $buttonarray[] = $mform->createElement('submit', 'testcollectingstatistics',
             get_string('testcollectingstatistics', 'tool_moodlebox'));
+        $message = $iscollecting ? get_string('stopcollectingstatistics', 'tool_moodlebox') : get_string('startcollectingstatistics', 'tool_moodlebox');
+        $value = $iscollecting ? 'stopcollectingstatistics' : 'startcollectingstatistics';
+        $buttonarray[] = $mform->createElement('submit', $value,
+            $message);
         $mform->addGroup($buttonarray, 'buttonar', '', [' '], false);
         $mform->closeHeaderBefore('buttonar');
     }

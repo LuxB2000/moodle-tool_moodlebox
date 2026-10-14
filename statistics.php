@@ -42,10 +42,96 @@ $strheading = get_string('statisticssettingsheading', 'tool_moodlebox');
 $PAGE->set_title($strheading);
 $PAGE->set_heading($strheading);
 
-$statisticsform = new statistics_form();
-
 echo $OUTPUT->header();
 echo $OUTPUT->heading($strheading);
+
+// == Step 1: handle "enable collection" submit from the simple form ==
+// This must be checked before $statisticsform is instantiated because when
+// the file is absent $statisticsform is null and get_data() is never called.
+if (optional_param('startcollectingstatistics', false, PARAM_BOOL)) {
+    require_sesskey();
+    if (!statistics_lib::is_statistics_collect_enabled()) {
+        statistics_lib::create_local_file();
+    }
+    redirect($PAGE->url);
+}
+
+// == Step 2: instantiate the full form only when collection is active ==
+$statisticsform = null;
+if (statistics_lib::is_statistics_collect_enabled()) {
+    $statisticsform = new statistics_form();
+}
+
+// == Step 3: process the full form (Post/Redirect/Get pattern) ==
+$restultofsend = null;
+$errorofsend = null;
+if ($statisticsform !== null && ($data = $statisticsform->get_data())) {
+    if (isset($data->stopcollectingstatistics)) {
+        // Disable statistics collection by removing the local file.
+        statistics_lib::delete_local_file();
+        redirect($PAGE->url);
+    } elseif (isset($data->saveconfiguration)) {
+        // Save configuration.
+        statistics_lib::save_configuration_to_file([
+            'maxfilesize' => $data->maxfilesize * 1024, // convert from kB to B
+        ]);
+        redirect($PAGE->url);
+    } elseif (isset($data->testcollectingstatistics)) {
+        // Run test.
+        // 1. If the file is not created, then create it.
+        if (!statistics_lib::is_local_file_present()) {
+            statistics_lib::create_local_file();
+        }
+        // 1.1 If reset is true, empty the file.
+        if ($data->reset) {
+            statistics_lib::empty_local_file();
+        }
+        // 2. Create a statistics container and collect new data.
+        $statisticscontainer = new moodlebox_statistics_container();
+        $statisticscontainer->collect();
+
+        // 3. Get all the local statistics.
+        $localstatisticcontainers = statistics_lib::get_statistics_from_file();
+
+        // 4. Send the statistics to the server.
+        $allstatistics = array_merge($localstatisticcontainers, [$statisticscontainer]);
+        try {
+            statistics_lib::send_statistics($allstatistics);
+            $restultofsend = 'success';
+            // TODO: 4.2 clean ONLY the statistics from local file
+        } catch (\Exception $e) {
+            error_log('Error sending statistics: ' . $e->getMessage(), DEBUG_DEVELOPER);
+            // TODO: save the error in the statistics container and save it as "result of sending that day". in meta-data file?
+            $errorofsend = $e->getMessage();
+            // 4.3. Append the statistics to the local file.
+            statistics_lib::add_statistics_to_local_file($statisticscontainer);
+        }
+        // Reset the form so the checkbox is unchecked on redisplay.
+        $statisticsform = new statistics_form();
+    }
+}
+
+// == Step 4: derive current state from the real file presence ==
+$iscollectionenabled = statistics_lib::is_statistics_collect_enabled();
+
+// == Step 5: if collection is disabled, show the simple enable form and exit ==
+if (!$iscollectionenabled) {
+    echo $OUTPUT->notification(get_string('statisticscollectiondisabled', 'tool_moodlebox'), 'warning');
+
+    // Simple enable form protected by sesskey.
+    echo html_writer::start_tag('form', ['method' => 'post', 'action' => $PAGE->url->out(false)]);
+    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
+    echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'startcollectingstatistics', 'value' => '1']);
+    echo html_writer::empty_tag('input', [
+        'type'  => 'submit',
+        'value' => get_string('startcollectingstatistics', 'tool_moodlebox'),
+        'class' => 'btn btn-primary',
+    ]);
+    echo html_writer::end_tag('form');
+
+    echo $OUTPUT->footer();
+    return;
+}
 
 // == Render introduction and current statistics ==
 echo $OUTPUT->box_start('generalbox', 'form');
@@ -57,56 +143,6 @@ foreach ($currentstatistics->get_fields_iterable() as $key => $statistic) {
     echo '<p>' . $statistic->get_name() . ': ' . $statistic->get_description() . ' - current value: ' . $statistic->get_value() . '</p>';
 }
 echo $OUTPUT->box_end();
-
-// == Collect form data if form has been submitted ==
-$restultofsend = null;
-$errorofsend = null;
-if ($data = $statisticsform->get_data()) {
-    // find wich button has been clicked
-    // do we want to save config ?
-    // or to run the test ?
-    if (isset($data->saveconfiguration)) {
-        // Save configuration
-        $config = [
-            'maxfilesize' => $data->maxfilesize * 1024, // convert from kB to B
-        ];
-        statistics_lib::save_configuration_to_file($config);
-    } elseif (isset($data->testcollectingstatistics)) {
-        // Run test     
-        // 1. If the file is not created, then create it.
-        if (!statistics_lib::is_local_file_present()) {
-            statistics_lib::create_local_file();
-        }
-        $reset = $data->reset;
-        // 1.1 If reset is true, empty the file.
-        if ($reset) {
-            statistics_lib::empty_local_file();
-        }
-        // 2. Create a statistics container and collect new data.
-        $statisticscontainer = new moodlebox_statistics_container();
-        $statisticscontainer->collect();
-
-        // 3. Get all the local statistics
-        $localstatisticcontainers = statistics_lib::get_statistics_from_file();
-        
-        // 4. Send the statistics to the server.
-        $allstatistics = array_merge($localstatisticcontainers, [$statisticscontainer]);
-        try{
-            statistics_lib::send_statistics($allstatistics);
-            $restultofsend = 'success';
-            // TODO: 4.2 clean ONLY the statistics from local file
-        } catch (\Exception $e) {
-            error_log('Error sending statistics: ' . $e->getMessage(), DEBUG_DEVELOPER);
-            // TODO: save the error in the statistics container and save it as "resut of sending that day". in meta-data file ?
-            $errorofsend = $e->getMessage();
-            // 4.3. Append the statistics to the local file.
-            statistics_lib::add_statistics_to_local_file($statisticscontainer);
-        }
-    }
-
-    // Reset the form.
-    $statisticsform = new statistics_form(); // TO FIX: checkbox is still checked
-}
 
 // == Render previous statistics ==
 $collectedstatistics = statistics_lib::get_statistics_from_file();

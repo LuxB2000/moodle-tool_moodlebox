@@ -50,7 +50,11 @@ $string['maxfilesize_help'] = 'La taille maximale des fichiers qui peuvent être
 $string['saveconfiguration'] = 'Sauvegarder la configuration';
 $string['statisticsresultofsend'] = 'Résultat de l\'envoi : {$a}';
 $string['statisticserrorofsend'] = 'Erreur lors de l\'envoi : {$a}';
-
+$string['stopcollectingstatistics'] = 'Arrêter la collecte de statistiques';
+$string['stopcollectingstatistics_desc'] = 'Arrêter la collecte de statistiques';
+$string['startcollectingstatistics'] = 'Démarrer la collecte de statistiques';
+$string['startcollectingstatistics_desc'] = 'Démarrer la collecte de statistiques';
+$string['statisticscollectiondisabled'] = 'La collecte de statistiques est désactivée';
 
 // Chaînes pour les tâches planifiées.
 $string['checkinternet_taskname'] = 'Vérifier la connexion internet';

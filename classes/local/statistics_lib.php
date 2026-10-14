@@ -49,6 +49,10 @@ class statistics_lib {
         }
     }
 
+    public static function is_statistics_collect_enabled(): bool {
+        return self::is_local_file_present();
+    }
+
     /**
      * Check whether the local statistics file exists.
      *
@@ -77,6 +81,18 @@ class statistics_lib {
             make_writable_directory($dir);
         }
         file_put_contents(self::$localfilepath, json_encode($content));
+    }
+
+    /**
+     * Delete the local statistics file, effectively disabling statistics collection.
+     *
+     * Does nothing if the file does not exist.
+     */
+    public static function delete_local_file(): void {
+        self::init();
+        if (file_exists(self::$localfilepath)) {
+            unlink(self::$localfilepath);
+        }
     }
 
     /**
