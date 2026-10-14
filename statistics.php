@@ -133,6 +133,7 @@ if (!$iscollectionenabled) {
     return;
 }
 
+// == Step 6: (statistics is enabled) render the statistics section
 // == Render introduction and current statistics ==
 echo $OUTPUT->box_start('generalbox', 'form');
 echo '<h3>' . get_string('currentstatisticsheader', 'tool_moodlebox') . '</h3>';
