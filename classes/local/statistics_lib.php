@@ -49,6 +49,11 @@ class statistics_lib {
         }
     }
 
+    /**
+     * Check if statistics collection is enabled. The statitics collection is enabled if the local data file exists.
+     *
+     * @return bool True if statistics collection is enabled, false otherwise.
+     */
     public static function is_statistics_collect_enabled(): bool {
         return self::is_local_file_present();
     }
